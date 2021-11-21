@@ -1,0 +1,18 @@
+.btn-doar {
+    background-color: #6f42c1;
+    color: #fff;
+    transition: .3s ease-in;
+  }
+  
+  .btn-doar:hover {
+    background-color: #F21667;
+    color: #fff;
+  }
+  
+  .pointer:hover{
+    cursor: pointer;
+  }
+  
+  .innerTable{
+    padding: 0.5rem;
+  }
