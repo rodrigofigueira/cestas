@@ -5,7 +5,7 @@ import _produtos from '../../data/produtos';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
-import { doc, addDoc, collection, updateDoc, increment } from 'firebase/firestore/lite';
+import { addDoc, collection } from 'firebase/firestore/lite';
 
 function Doacao() {
 
@@ -17,31 +17,6 @@ function Doacao() {
   const [bairro, setBairro] = useState('');
   const [opcaoRetirada, setOpcaoRetirada] = useState();
 
-  // const fetchProdutos = async () => {
-  //   const produtosCol = collection(db, 'produtos');
-  //   const produtosSnapshot = await getDocs(produtosCol);
-  //   let _produtos = [];
-
-  //   produtosSnapshot.docs.forEach(item => {
-
-  //     _produtos.push({
-  //       id: item.id,
-  //       ...item.data(),
-  //       quantidade: 0
-  //     });  
-
-  //   });
-
-  //   console.log(_produtos);
-
-  //   setProdutos(_produtos);
-
-  // }
-
-  // useEffect(() => {
-  //   fetchProdutos();
-  // }, []);
-
   function changeProdutos(e, index){       
     let it = [...produtos];
     it[index].quantidade = parseInt(e.target.value);        
@@ -52,69 +27,76 @@ function Doacao() {
 
     event.preventDefault();
 
-    const payload = {
+    let payload = createPayload();
+    if(!validadePayload(payload)) return;
+     
+    await addDoc(collection(db, 'doacoes'), payload)
+    .then(() => {
+      resetState();
+      toast.success('Sua doação foi registrada, Deus te abençoe!');
+    })
+    .catch(() => {
+      toast.error('Ocorreu um erro');
+    });      
+    
+  }
+
+  function createPayload(){
+
+    let _payload = {
       nome,
       telefone,
       endereco,
       numero,
       bairro,
-      opcaoRetirada            
+      opcaoRetirada,      
     }    
+
+    let produtosDoados = produtos
+                        .filter(produto => produto.quantidade > 0)
+                        .map(({id, nome, quantidade}) => ({id, nome, quantidade}));        
+
+    _payload.produtosDoados = produtosDoados;
+
+    return _payload;
+
+  }
+
+  function validadePayload(payload){
 
     for(let key in payload){
 
+      if(key === 'produtosDoados') continue;
+
       if(payload[key] === undefined || !payload[key]){
-        return toast.error(`Por favor preencha o campo ${key}`);
+        toast.error(`Por favor preencha o campo ${key}`);
+        return false;
       }
 
       if(key === 'telefone' && payload[key].length < 8){
-        return toast.error('Por favor corrija o telefone');
+        toast.error('Por favor corrija o telefone');
+        return false;
       }
 
     }
 
-    let produtosDoados = produtos
-                         .filter(produto => produto.quantidade > 0)
-                         .map(({id, nome, quantidade}) => ({id, nome, quantidade}));        
-                         
-    if(produtosDoados.length === 0) 
-      return toast.error('Não foi selecionado nenhum item para doação');    
-
-    payload.produtosDoados = produtosDoados;
+    if(payload.produtosDoados.length === 0) {
+      toast.error('Não foi selecionado nenhum item para doação');    
+      return false;
+    }    
     
-    try{
+    return true;
 
-      const doacaoRef = await addDoc(collection(db, 'doacoes'), payload);
+  }
 
-      produtosDoados.forEach(async produto => {
-
-        const produtoRef = doc(db, "produtos", produto.id)
-        await updateDoc(produtoRef, {doado: increment(produto.quantidade)});
-
-      });
-
-      if(doacaoRef.id) {
-        
-        produtos.forEach(produto => {produto.quantidade = 0});
-
-        console.log(produtos);
-        setProdutos(produtos);
-        setNome('');
-        setTelefone('');
-        setEndereco('');
-        setNumero('');
-        setBairro('');
-        
-        toast.success('Sua doação foi registrada, Deus te abençoe!');
-
-      }
-
-
-
-    } catch (e){
-      toast.error('Ocorreu um erro');
-    }
-    
+  function resetState(){
+    produtos.forEach(produto => {produto.quantidade = 0});
+    setProdutos(produtos);
+    setNome('');
+    setTelefone('');
+    setEndereco('');
+    setNumero('');
+    setBairro('');    
   }
 
   return (
@@ -204,7 +186,7 @@ function Doacao() {
             <h4 className="my-3">Postos de entrega</h4>    
             <ul>
               <li className="mx-4">Rua Biotônico, 740 - casa 12, Vila Nova Urupês</li>    
-              <li className="mx-4">Falta enviar o endereço</li>    
+              <li className="mx-4">Rua Clemente Dionisio Pereira 242 - Novo Colorado</li>    
             </ul>
           
           </div>          

@@ -1,7 +1,7 @@
 let produtos = [
     {
         "id": "1e68fDBWrpa3khaBcCGc",
-        "doado": 51,
+        "doado": 0,
         "meta": 50,
         "nome": "Bolacha Maizena",
         "quantidade": 0
@@ -10,12 +10,12 @@ let produtos = [
         "id": "76mhrQ4EYkmcuFskMNr4",
         "nome": "Pacote Açúcar 1K",
         "meta": 100,
-        "doado": 1,
+        "doado": 0,
         "quantidade": 0
     },
     {
         "id": "91uv4xMcZX135wRpz29T",
-        "doado": 2,
+        "doado": 0,
         "nome": "Litro Óleo",
         "meta": 100,
         "quantidade": 0
@@ -31,20 +31,20 @@ let produtos = [
         "id": "I21W3i9XIB5l6BXwoKCl",
         "meta": 100,
         "nome": "Pacote Feijão 1K",
-        "doado": 2,
+        "doado": 0,
         "quantidade": 0
     },
     {
         "id": "JpH5m2rOjbpCyU5y6pCj",
         "nome": "Pacote Café 500 gramas",
-        "doado": 4,
+        "doado": 0,
         "meta": 50,
         "quantidade": 0
     },
     {
         "id": "LPVQtSylhyeky2GhhmyG",
         "meta": 50,
-        "doado": 2,
+        "doado": 0,
         "nome": "Pacote de Arroz 5k",
         "quantidade": 0
     },
@@ -58,7 +58,7 @@ let produtos = [
     {
         "id": "QvH5p1jZG8IF3P7svWrq",
         "nome": "Pacote Sal 1k",
-        "doado": 6,
+        "doado": 0,
         "meta": 50,
         "quantidade": 0
     },
@@ -80,7 +80,7 @@ let produtos = [
         "id": "YXT8e5zYQ6eFjYTuokUZ",
         "meta": 50,
         "nome": "Pacote Farinha Trigo",
-        "doado": 2,
+        "doado": 0,
         "quantidade": 0
     },
     {

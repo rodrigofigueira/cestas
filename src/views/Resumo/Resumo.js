@@ -2,6 +2,7 @@ import React from "react";
 import Cabecalho from "../../components/cabecalho";
 import Card from "../../components/card/card";
 import db from '../../data/firebase';
+import _produtos from '../../data/produtos';
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore/lite';
 
@@ -28,6 +29,27 @@ function Resumo(){
     
         setDoacoes(_doacoes);
 
+        const produtosDoados = _doacoes.map(doacao => doacao.produtosDoados);
+
+        atualizarListaDeProdutos(_produtos, produtosDoados);
+        setProdutos(_produtos);
+
+    }
+
+    function atualizarListaDeProdutos(listaDeProdutos, listaProdutosDoados){
+
+        listaProdutosDoados.forEach(produtoDoado => {
+            produtoDoado.forEach((element) => {
+                
+                const idDoElementoDoado = element.id;
+                const quantidadeDoada = element.quantidade;
+        
+                const indiceParaAtualizar = listaDeProdutos.findIndex(x => x.id === idDoElementoDoado);
+        
+                listaDeProdutos[indiceParaAtualizar].doado += parseInt(quantidadeDoada);
+            });
+        });
+        
     }
 
     async function fetchProdutos(){
@@ -49,7 +71,8 @@ function Resumo(){
 
     }
 
-    useEffect(() => fetchProdutos(), []);
+    
+
     useEffect(() => fetchDoacoes(), []);
 
     return(
