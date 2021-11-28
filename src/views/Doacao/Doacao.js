@@ -16,6 +16,7 @@ function Doacao() {
   const [numero, setNumero] = useState('');
   const [bairro, setBairro] = useState('');
   const [opcaoRetirada, setOpcaoRetirada] = useState();
+  const [enviando, setEnviando] = useState(false);
 
   function changeProdutos(e, index){       
     let it = [...produtos];
@@ -30,12 +31,14 @@ function Doacao() {
     let payload = createPayload();
     if(!validadePayload(payload)) return;
      
+    setEnviando(true);
     await addDoc(collection(db, 'doacoes'), payload)
     .then(() => {
       resetState();
       toast.success('Sua doação foi registrada, Deus te abençoe!');
     })
     .catch(() => {
+      resetState();
       toast.error('Ocorreu um erro');
     });      
     
@@ -96,7 +99,8 @@ function Doacao() {
     setTelefone('');
     setEndereco('');
     setNumero('');
-    setBairro('');    
+    setBairro('');   
+    setEnviando(false); 
   }
 
   return (
@@ -233,10 +237,24 @@ function Doacao() {
               </table>
             </div>
           </div>
-                
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary btn-block bg-purple">Doar</button>
-          </div>
+
+          {
+
+            enviando ? 
+
+             <div className="text-center">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            :
+
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary btn-block bg-purple">Doar</button>
+            </div>
+
+          }
+
 
         </form>
 
